@@ -1,16 +1,25 @@
-numpy
+ipykernel
 pandas
-scikit-learn
+numpy
 matplotlib
+plotly
 seaborn
+scipy
+scikit-learn
+imblearn
 xgboost
-Flask
-PyYAML
+catboost
+pymongo
+from_root
+evidently==0.2.8
 dill
-gunicorn
-mlflow
-dvc
-evidently
-python-dotenv
--e .
-
+PyYAML
+neuro_mf
+boto3
+mypy-boto3-s3
+botocore
+fastapi
+uvicorn
+jinja2
+python-multipart
+-e .            

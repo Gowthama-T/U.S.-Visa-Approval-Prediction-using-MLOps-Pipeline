@@ -1,22 +1,23 @@
 import logging
 import os
-from .exception import USvisaException
-
-from from_root import from_root
 from datetime import datetime
+from from_root import from_root
 
+# Log file name
 LOG_FILE = f"{datetime.now().strftime('%m_%d_%Y_%H_%M_%S')}.log"
 
-log_dir = 'logs'
-logs_path = os.path.join(from_root(), log_dir, LOG_FILE)
-
+# Logs directory in project root
+log_dir = os.path.join(from_root(), "logs")
 os.makedirs(log_dir, exist_ok=True)
 
+# Full log file path
+logs_path = os.path.join(log_dir, LOG_FILE)
+
+# Configure logging
 logging.basicConfig(
     filename=logs_path,
     format="[ %(asctime)s ] %(name)s - %(levelname)s - %(message)s",
     level=logging.DEBUG,
 )
 
-# 🔥 Export logger object for import
 logger = logging.getLogger(__name__)
