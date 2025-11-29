@@ -47,3 +47,27 @@ class DataValidationArtifact:
     message: str
     drift_report_file_path: str
 
+
+@dataclass
+class DataTransformationConfig:
+    data_transformation_dir: str = os.path.join(training_pipeline_config.artifact_dir, DATA_TRANSFORMATION_DIR_NAME)
+    transformed_train_file_path: str = os.path.join(data_transformation_dir, DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR,
+                                                    TRAIN_FILE_NAME.replace("csv", "npy"))
+    transformed_test_file_path: str = os.path.join(data_transformation_dir, DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR,
+                                                   TEST_FILE_NAME.replace("csv", "npy"))
+    transformed_object_file_path: str = os.path.join(data_transformation_dir,
+                                                     DATA_TRANSFORMATION_TRANSFORMED_OBJECT_DIR,
+                                                     PREPROCSSING_OBJECT_FILE_NAME)
+
+@dataclass
+class ModelTrainerConfig:
+    trained_model_file_path: str
+    model_config_file_path: str
+    expected_accuracy: float
+    overfitting_threshold: float
+
+    def __init__(self):
+        self.trained_model_file_path = os.path.join("artifact", "model_trainer", "model.pkl")
+        self.model_config_file_path = os.path.join("config", "model.yaml")
+        self.expected_accuracy = 0.7
+        self.overfitting_threshold = 0.10

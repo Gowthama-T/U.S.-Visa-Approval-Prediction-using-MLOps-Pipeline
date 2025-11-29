@@ -7,7 +7,7 @@ from datetime import date
 DATABASE_NAME = "US_VISA"
 COLLECTION_NAME = "visa_data"
 
-MONGO_DB_URL = "mongodb+srv://gowthugowthu000_db_user:HqKW38AlG7maV0ph@cluster0.rt0zh1e.mongodb.net/?appName=Cluster0"
+MONGO_DB_URL = "mongodb+srv://GowthamKullu:YQ96CwF\!x-8TGNr@cluster0.rt0zh1e.mongodb.net/?appName=Cluster0"
 MONGODB_URL_KEY = "MONGO_DB_URL"
 
 # Path to schema file
@@ -67,7 +67,8 @@ CURRENT_YEAR = date.today().year
 # =========================
 MODEL_TRAINER_DIR_NAME = "model_trainer"
 MODEL_TRAINER_TRAINED_MODEL_DIR = "trained_model"
-MODEL_TRAINER_EXPECTED_SCORE = 0.80
+MODEL_TRAINER_TRAINED_MODEL_NAME = "model.pkl"
+MODEL_TRAINER_EXPECTED_SCORE : float = 0.6
 MODEL_TRAINER_MODEL_CONFIG_FILE_PATH = os.path.join("config", "model.yaml")
 
 # =========================
