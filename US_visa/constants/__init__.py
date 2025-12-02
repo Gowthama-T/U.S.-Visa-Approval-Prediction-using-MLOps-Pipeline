@@ -26,6 +26,11 @@ CURRENT_YEAR = date.today().year
 PREPROCSSING_OBJECT_FILE_NAME = "preprocessing.pkl"
 SCHEMA_FILE_PATH = os.path.join("config", "schema.yaml")
 
+
+AWS_ACCESS_KEY_ID_ENV_KEY = "AWS_ACCESS_KEY_ID"
+AWS_SECRET_ACCESS_KEY_ENV_KEY = "AWS_SECRET_ACCESS_KEY"
+REGION_NAME = "ap-southeast-2"
+
 # =========================
 # DATA INGESTION CONSTANTS
 # =========================
@@ -71,13 +76,25 @@ MODEL_TRAINER_TRAINED_MODEL_NAME = "model.pkl"
 MODEL_TRAINER_EXPECTED_SCORE : float = 0.6
 MODEL_TRAINER_MODEL_CONFIG_FILE_PATH = os.path.join("config", "model.yaml")
 
+
+"""
+MODEL EVALUATION related constant 
+"""
+MODEL_EVALUATION_CHANGED_THRESHOLD_SCORE: float = 0.02
+MODEL_BUCKET_NAME = "usvisamodel2026"
+MODEL_PUSHER_S3_KEY = "model-registry"
+
+
+APP_HOST = "0.0.0.0"
+APP_PORT = 8080
+
 # =========================
 # MODEL EVALUATION CONSTANTS
 # =========================
-MODEL_EVALUATION_CHANGED_THRESHOLD_SCORE = 0.02
-MODEL_BUCKET_NAME = "us-visa-model"
+#MODEL_EVALUATION_CHANGED_THRESHOLD_SCORE = 0.02
+#MODEL_BUCKET_NAME = "us-visa-model"
 
 # =========================
 # MODEL PUSHER CONSTANTS
 # =========================
-MODEL_PUSHER_S3_KEY = MODEL_FILE_NAME
+#MODEL_PUSHER_S3_KEY = MODEL_FILE_NAME
