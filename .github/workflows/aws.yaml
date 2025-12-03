@@ -2,16 +2,22 @@ name: Deploy Application Docker Image to EC2 instance
 
 on:
   push:
-    branches: [main]
-
+    branches: [ main ]
 
 jobs:
   Continuous-Integration:
     runs-on: [self-hosted, Windows, X64]
 
+    defaults:
+      run:
+        shell: powershell
+        working-directory: repo
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          path: repo   # 👈 short directory path to avoid PathTooLong
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -31,16 +37,25 @@ jobs:
           ECR_REPOSITORY: ${{ secrets.ECR_REPO }}
           IMAGE_TAG: latest
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .  
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          $image = "$env:ECR_REGISTRY/$env:ECR_REPOSITORY:$env:IMAGE_TAG"
+          docker build -t $image .
+          docker push $image
+          "image=$image" >> $env:GITHUB_OUTPUT
 
   Continuous-Deployment:
     needs: Continuous-Integration
-    runs-on: self-hosted
+    runs-on: [self-hosted, Windows, X64]
+
+    defaults:
+      run:
+        shell: powershell
+        working-directory: repo
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          path: repo   # 👈 same short folder
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -53,6 +68,22 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Run Docker Image to serve users
+      - name: Run Docker Image on Windows EC2
         run: |
-         docker run -d -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" -e AWS_DEFAULT_REGION="${{ secrets.AWS_DEFAULT_REGION }}" -e MONGODB_URL="${{ secrets.MONGODB_URL }}" -p 8080:8080 "${{ steps.login-ecr.outputs.registry }}"/"${{ secrets.ECR_REPO }}":latest
+          $image = "${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPO }}:latest"
+
+          # Optional: stop & remove old container named 'visa-app' if it exists
+          $existing = docker ps -q --filter "name=visa-app"
+          if ($existing) {
+            docker stop $existing | Out-Null
+            docker rm $existing | Out-Null
+          }
+
+          docker run -d `
+            --name visa-app `
+            -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" `
+            -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" `
+            -e AWS_DEFAULT_REGION="${{ secrets.AWS_DEFAULT_REGION }}" `
+            -e MONGODB_URL="${{ secrets.MONGODB_URL }}" `
+            -p 8080:8080 `
+            $image
