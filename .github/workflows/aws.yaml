@@ -17,8 +17,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          clean: false         # 👈 Prevents .dockerignore removal error
-          path: repo           # 👈 short folder name
+          clean: false
+          fetch-depth: 0
+          filter: tree:0
+         # 👈 short folder name
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -57,8 +59,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          clean: false          # 👈 added here too
-          path: repo
+          clean: false
+          fetch-depth: 0
+          filter: tree:0
+
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
