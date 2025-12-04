@@ -14,10 +14,11 @@ jobs:
         working-directory: repo
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          path: repo   # 👈 short directory path to avoid PathTooLong
+          clean: false         # 👈 Prevents .dockerignore removal error
+          path: repo           # 👈 short folder name
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -38,9 +39,10 @@ jobs:
           IMAGE_TAG: latest
         run: |
           $image = "$env:ECR_REGISTRY/$env:ECR_REPOSITORY:$env:IMAGE_TAG"
-          docker build -t $image .
+          docker build -t $image ./repo     # 👈 ensure correct build path
           docker push $image
           "image=$image" >> $env:GITHUB_OUTPUT
+
 
   Continuous-Deployment:
     needs: Continuous-Integration
@@ -52,10 +54,11 @@ jobs:
         working-directory: repo
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          path: repo   # 👈 same short folder
+          clean: false          # 👈 added here too
+          path: repo
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -68,11 +71,11 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Run Docker Image on Windows EC2
+      - name: Run Docker Image on EC2 Windows runner
         run: |
           $image = "${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPO }}:latest"
 
-          # Optional: stop & remove old container named 'visa-app' if it exists
+          # Stop old container if exists
           $existing = docker ps -q --filter "name=visa-app"
           if ($existing) {
             docker stop $existing | Out-Null
