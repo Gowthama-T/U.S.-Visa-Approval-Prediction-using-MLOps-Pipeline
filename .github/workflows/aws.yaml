@@ -11,7 +11,6 @@ jobs:
     defaults:
       run:
         shell: powershell
-        working-directory: repo
 
     steps:
       - name: Checkout repository
@@ -20,7 +19,6 @@ jobs:
           clean: false
           fetch-depth: 0
           filter: tree:0
-         # 👈 short folder name
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -41,10 +39,9 @@ jobs:
           IMAGE_TAG: latest
         run: |
           $image = "$env:ECR_REGISTRY/$env:ECR_REPOSITORY:$env:IMAGE_TAG"
-          docker build -t $image ./repo     # 👈 ensure correct build path
+          docker build -t $image .
           docker push $image
           "image=$image" >> $env:GITHUB_OUTPUT
-
 
   Continuous-Deployment:
     needs: Continuous-Integration
@@ -53,7 +50,6 @@ jobs:
     defaults:
       run:
         shell: powershell
-        working-directory: repo
 
     steps:
       - name: Checkout repository
@@ -62,7 +58,6 @@ jobs:
           clean: false
           fetch-depth: 0
           filter: tree:0
-
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -79,13 +74,14 @@ jobs:
         run: |
           $image = "${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPO }}:latest"
 
-          # Stop old container if exists
+          # Stop old container
           $existing = docker ps -q --filter "name=visa-app"
           if ($existing) {
             docker stop $existing | Out-Null
             docker rm $existing | Out-Null
           }
 
+          docker pull $image
           docker run -d `
             --name visa-app `
             -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" `
