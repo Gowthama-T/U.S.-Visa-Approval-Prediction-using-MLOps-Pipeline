@@ -5,20 +5,12 @@ on:
     branches: [ main ]
 
 jobs:
-  Continuous-Integration:
-    runs-on: [self-hosted, Windows, X64]
-
-    defaults:
-      run:
-        shell: powershell
+    Continuous-Integration:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          clean: false
-          fetch-depth: 0
-          filter: tree:0
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -26,6 +18,10 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
@@ -40,10 +36,9 @@ jobs:
 
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-
-  Continuous-Deployment:
+    
+    Continuous-Deployment:
     needs: Continuous-Integration
     runs-on: [self-hosted, Windows, X64]
 
