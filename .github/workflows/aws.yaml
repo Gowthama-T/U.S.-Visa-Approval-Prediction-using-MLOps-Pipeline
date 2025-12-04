@@ -2,15 +2,15 @@ name: Deploy Application Docker Image to EC2 instance
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
-    Continuous-Integration:
+  Continuous-Integration:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+      uses: actions/checkout@v4
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -24,7 +24,6 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build, tag, and push image to Amazon ECR
-        id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPO }}
@@ -37,23 +36,11 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-    
-    Continuous-Deployment:
+  Continuous-Deployment:
     needs: Continuous-Integration
     runs-on: [self-hosted, Windows, X64]
 
-    defaults:
-      run:
-        shell: powershell
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          clean: false
-          fetch-depth: 0
-          filter: tree:0
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -67,9 +54,8 @@ jobs:
 
       - name: Run Docker Image on EC2 Windows runner
         run: |
-          $image = "${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPO }}:latest"
+          $image="${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPO }}:latest"
 
-          # Stop old container
           $existing = docker ps -q --filter "name=visa-app"
           if ($existing) {
             docker stop $existing | Out-Null
