@@ -2,7 +2,7 @@ name: Deploy Application Docker Image to EC2 instance
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   Continuous-Integration:
@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-      uses: actions/checkout@v4
+        uses: actions/checkout@v4
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
