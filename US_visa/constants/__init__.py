@@ -7,7 +7,7 @@ from datetime import date
 DATABASE_NAME = "US_VISA"
 COLLECTION_NAME = "visa_data"
 
-MONGO_DB_URL = "mongodb+srv://GowthamKullu:YQ96CwF\!x-8TGNr@cluster0.rt0zh1e.mongodb.net/?appName=Cluster0"
+MONGO_DB_URL = "mongodb+srv://GowthamKullu:Gowtham2025@cluster0.rt0zh1e.mongodb.net/?retryWrites=true&w=majority"
 MONGODB_URL_KEY = "MONGO_DB_URL"
 
 # Path to schema file
