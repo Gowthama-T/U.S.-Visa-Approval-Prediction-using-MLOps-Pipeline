@@ -1,82 +1,32 @@
-.navbar-light .navbar-brand {
-    color: rgba(0, 0, 0, .9);
-}
-
-.navbar-light .navbar-brand {
-    margin-left: auto;
-    margin-right: auto;
-}
-
 body {
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f8f9fa;
+  color: #333;
 }
 
-.formBox {
-    margin-top: 50px;
-    padding: 50px;
+h2 {
+  font-weight: 700;
 }
 
-h1 {
-    margin: 0;
-    padding: 0;
-    text-align: center;
-    margin-bottom: 50px !important;
-    text-transform: uppercase;
-    font-size: 48px;
+.card {
+  border-radius: 1rem;
 }
 
-.inputBox {
-    position: relative;
-    box-sizing: border-box;
-    margin-bottom: 40px;
+.form-label {
+  color: #0d6efd;
+  font-weight: 500;
 }
 
-.button {
-    width: 100%;
-    background: #00bcd4;
-    color: #fff;
-    border-radius: 0;
-    border: none;
-    outline: none;
-    height: 50px;
-    font-size: 24px;
+.btn-primary {
+  background: linear-gradient(90deg, #0d6efd, #0b5ed7);
+  border: none;
+  transition: 0.3s;
 }
 
-.input {
-    position: relative;
-    width: 100%;
-    height: 50px;
-    background: transparent;
-    border: none;
-    outline: none;
-    font-size: 24px;
-    border-bottom: 2px solid rgba(0, 0, 0, .5);
+.btn-primary:hover {
+  background: linear-gradient(90deg, #0b5ed7, #084298);
 }
 
-.inputText {
-    position: absolute;
-    line-height: 50px;
-    font-size: 24px;
-    transition: .5s;
-    opacity: 0.5;
-}
-
-.focus .inputText {
-    transform: translateY(-30px);
-    font-size: 18px;
-    opacity: 1;
-    color: #00bcd4;
-}
-
-.btn_train {
-    width: 100%;
-    background: red;
-    color: #fff;
-    border-radius: 0;
-    border: none;
-    outline: none;
-    height: 50px;
-    font-size: 24px;
+footer {
+  font-size: 14px;
 }

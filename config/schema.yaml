@@ -12,10 +12,12 @@ columns:
   full_time_position: category
   case_status: category
 
+
 numerical_columns:
   - no_of_employees
   - prevailing_wage
   - yr_of_estab
+
 
 categorical_columns:
   - case_id
@@ -28,27 +30,37 @@ categorical_columns:
   - full_time_position
   - case_status
 
+
+# Drop noisy + unused columns
 drop_columns:
   - case_id
+  - continent
+  - region_of_employment
+  - unit_of_wage
   - yr_of_estab
 
-# for data transformation
+
+# Data transformation config
+
 num_features:
   - no_of_employees
   - prevailing_wage
   - company_age
 
+
+# Ordinal (ordered categories)
 or_columns:
+  - education_of_employee
+
+
+# One-hot (no order)
+oh_columns:
   - has_job_experience
   - requires_job_training
   - full_time_position
-  - education_of_employee
 
-oh_columns:
-  - continent
-  - unit_of_wage
-  - region_of_employment
 
 transform_columns:
   - no_of_employees
+  - prevailing_wage
   - company_age
